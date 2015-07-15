@@ -85,8 +85,6 @@
     $page_url =$this->getUrl('/webengagecallback/index')."?noheader=true";
     //$resize_url = Mage::helper('weplugin')->getUrlWrapper(Mage::helper("adminhtml")->getUrl("weplugin/adminhtml_webengageresize"));
     $activation_url = $this->getUrl('/webengagemain/index')."?weAction=activate";
-    Mage::log($next_url);
-    Mage::log($page_url);
     $email = $userEmail;
     $urlArr = parse_url($siteUrl);
     $domainName = $this->getRequest()->getHttpHost();

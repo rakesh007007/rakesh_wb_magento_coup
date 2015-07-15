@@ -12,10 +12,6 @@ class Webengage_Coup_Helper_Data extends Mage_Core_Helper_Abstract
     public function Mytestmethod($item)
     {
         $item         = $item;
-        $qty          = $item->getQty();
-        $productId    = $item->getProductId();
-        $helper       = Mage::helper('catalog/product_configuration');
-        $productModel = Mage::getModel('catalog/product');
         $itemid       = $item->getItemId();
         $varr         = Mage::getModel('webengage_coup/itemtrack')->load((int) $itemid, 'itemid');
         $superUrl     = $varr->getUrl();

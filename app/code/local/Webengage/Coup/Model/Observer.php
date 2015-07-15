@@ -26,7 +26,6 @@ class Webengage_Coup_Model_Observer
      public function ItemParamsAfterUpdate($observer)
     {
         $params   = $observer->getRequest()->getParams();
-        Mage::log('item update working at observer');
         $url      = http_build_query($params);
         $removedId = $params['id'];
         $varr         = Mage::getModel('webengage_coup/itemtrack')->load((int) $removedId, 'itemid');
@@ -55,10 +54,6 @@ class Webengage_Coup_Model_Observer
     public function Mytestmethod($observer)
     {
         $item         = $observer->getQuoteItem();
-        $qty          = $item->getQty();
-        $productId    = $item->getProductId();
-        $helper       = Mage::helper('catalog/product_configuration');
-        $productModel = Mage::getModel('catalog/product');
         $itemid       = $item->getItemId();
         $varr         = Mage::getModel('webengage_coup/itemtrack')->load((int) $itemid, 'itemid');
         $superUrl     = $varr->getUrl();
@@ -72,10 +67,8 @@ class Webengage_Coup_Model_Observer
         else if (strlen($coup['code']) > 0) {
             $_SESSION['raku']       = $superUrl . '&coup=' . $coup['code'];
             $_SESSION['coupondata'] = $coup;
-            Mage::log('checkpoint1');
         } else {
             $_SESSION['raku'] = $superUrl;
-            Mage::log('checkpoint2');
         }
     }
 }
