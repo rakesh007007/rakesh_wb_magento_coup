@@ -1,0 +1,138 @@
+<?php
+$licenseCode=Mage::helper('webengage_coup')->FindLicenseId();
+Mage::log( 'working everywhere' );
+echo "
+  <script type=\"text/javascript\">
+function getUrlParameter(sParam,par2)
+{
+    var sPageURL = par2;
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++) 
+    {
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam) 
+        {
+            return sParameterName[1];
+        }
+    }
+} 
+function getDeleteLinks() {
+
+    var links = document.getElementsByTagName(\"a\");
+    var ytlinks = [];
+       for(var i=0,l=links.length;i<l;i++){
+           if(links[i].href.indexOf(\"checkout/cart/ajaxDelete\") !==-1) {
+            ytlinks.push(links[i]);  
+           } 
+        } 
+   return ytlinks;
+}
+function doAjax(url, callback) {
+    var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject(\"Microsoft.XMLHTTP\");
+
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+            callback(xmlhttp.responseText);
+        }
+    }
+
+    xmlhttp.open(\"GET\", url, true);
+    xmlhttp.send();
+}
+</script>
+";
+echo "<script>
+      function getCookie(cname) {
+    var name = cname + \"=\";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+    }
+    return \"\";
+}
+ 	 </script>";
+echo "<script>
+    var r = new RegExp("^.*\/id\/([0-9]+)\/.*$");
+    //r.exec(s)[1];
+    allLinks = getDeleteLinks();
+
+
+
+</script>";
+$siteUrl = Mage::getBaseUrl( Mage_Core_Model_Store::URL_TYPE_WEB );
+if( isset( $_SESSION['raku'] ) ) {
+    $pdurl   = $siteUrl . 'webengage/cart2/add?' . $_SESSION['raku'];
+    unset( $_SESSION['raku'] );
+    echo "<script>var licenseCode='" . $licenseCode . "'</script>";
+    echo "<script>window.pdurl='" . $pdurl . "'</script>";
+    //echo "<script>alert(".$pdurl.");</script>";
+    echo "<script type=\"text/javascript\" id=\"_webengage_script_tag\">
+ 	         if(getCookie('displayed')!='yes'){
+
+ 	         	window._weq = window._weq || {};
+					  _weq['webengage.licenseCode'] = licenseCode;
+					  _weq['webengage.survey.forcedRender'] = true;
+					  _weq['webengage.notification.forcedRender'] = true;
+					   _weq['webengage.notification.defaultRender'] = true;
+					  _weq['webengage.ruleData'] = {'cartDropped': 'yes'};
+					  _weq['webengage.widgetVersion'] = '4.0';
+					  _weq['webengage.notification.tokens'] = {'pdurl':pdurl};
+					  
+					  
+					   (function(d){ 
+						var _we = d.createElement('script');
+						_we.type = 'text/javascript';
+						_we.async = true;
+						_we.src = (d.location.protocol == 'https:' ? '//ssl.widgets.webengage.com' : '//cdn.widgets.webengage.com') +  '/js/widget/webengage-min-v-4.0.js';
+						var _sNode = d.getElementById('_webengage_script_tag');
+						_sNode.parentNode.insertBefore(_we, _sNode);
+					  })(document);
+
+ 	         }
+ 	         else {
+ 	         	document.cookie=\"displayed=no \";
+ 	         }
+
+		          
+				</script>";
+}
+$ct = Mage::getModel( 'checkout/session' )->getQuote()->getCouponCode();
+if( strlen( $ct ) > 0 ) {
+   //coupon already applied
+} else {
+    //before this minicartr masala
+    $coup = Mage::helper( 'webengage_coup' )->couponPost();
+    if( $coup != '' ) {
+        //Mage::log('coupons');
+        //Mage::log($coup);
+        echo "<script>usercoup='".$coup."'</script>";
+        $cpurl   = $siteUrl . 'webengage/cart2/addcoupon?coup=' . $coup;
+        Mage::log( $cpurl );
+        echo "<script>window.cpurl='" . $cpurl . "'</script>";
+        //echo "<script>alert(".$pdurl.");</script>";
+        echo "<script type=\"text/javascript\" id=\"_webengage_script_tag\">
+		          window._weq = window._weq || {};
+					  _weq['webengage.licenseCode'] = '826170b8';
+					  _weq['webengage.survey.forcedRender'] = true;
+					  _weq['webengage.notification.forcedRender'] = true;
+					   _weq['webengage.notification.defaultRender'] = true;
+					  _weq['webengage.ruleData'] = {'cartActive': 'yes'};
+					  _weq['webengage.widgetVersion'] = '4.0';
+					  _weq['webengage.notification.tokens'] = {'cpurl':cpurl};
+					  
+					  
+					   (function(d){ 
+						var _we = d.createElement('script');
+						_we.type = 'text/javascript';
+						_we.async = true;
+						_we.src = (d.location.protocol == 'https:' ? '//ssl.widgets.webengage.com' : '//cdn.widgets.webengage.com') +  '/js/widget/webengage-min-v-4.0.js';
+						var _sNode = d.getElementById('_webengage_script_tag');
+						_sNode.parentNode.insertBefore(_we, _sNode);
+					  })(document);
+				</script>";
+    }
+}
+//http://localhost/magento_final/helloworld/cart/addcoupon?coup=random123
+?>

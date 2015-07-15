@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<config>
+    <menu>
+        <webengage_coup module="webengage_coup">
+            <title>Coupon Engage</title>
+            <sort_order>77</sort_order>
+            <children>
+                <items module="webengage_coup">
+                    <title>Manage Notifications</title>
+                    <sort_order>0</sort_order>
+                    <action>adminhtml/coup/index</action>
+                </items>
+				 <items2 module="webengage_coup">
+                    <title>Settings</title>
+                    <sort_order>2</sort_order>
+                    <action>adminhtml/webengagemain/index</action>
+                </items2>
+                 <items3 module="webengage_coup">
+                    <title>stats</title>
+                    <sort_order>3</sort_order>
+                    <action>adminhtml/coup/edit</action>
+                </items3>
+
+            </children>
+        </webengage_coup>
+    </menu>
+    <acl>
+        <resources>
+            <all>
+                <title>Allow Everything</title>
+            </all>
+            <admin>
+                <children>
+                    <webengage_coup>
+                        <title>Webengage Coup</title>
+                        <sort_order>202</sort_order>
+                        <children>
+                            <items module="webengage_coup">
+                                <title>Webengage Coup</title>
+                                <sort_order>0</sort_order>
+                            </items>
+							<items2 module="webengage_coup">
+                                <title>Webengage Coup2</title>
+                                <sort_order>2</sort_order>
+                            </items2>
+                        </children>
+                    </webengage_coup>
+                </children>
+            </admin>
+        </resources>
+    </acl>
+</config>

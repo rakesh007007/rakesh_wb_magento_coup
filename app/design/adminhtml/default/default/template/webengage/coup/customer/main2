@@ -1,0 +1,127 @@
+<?php $helper = Mage::helper('webengage_coup');
+      $_collection = $helper->getNotifications();
+      $rcoupon = Mage::getModel('salesrule/coupon')->getCollection();
+?>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script>
+    function rak(){
+        document.getElementById("rakesh").style.display='block';
+    }
+</script>
+<h1>Config:kfnsdfk,fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff</h1>
+<?php
+$modules=Mage::getConfig()->getNode('modules');
+$modulesArray = (array)$modules;
+if(isset($modulesArray['Webengage_Weplugin']) && Mage::helper('weplugin')->readLicenseCodeFromDb()!==null && Mage::helper('weplugin')->readLicenseCodeFromDb()!=='' ){
+	$licenseCode = Mage::helper('weplugin')->readLicenseCodeFromDb();
+	echo ('<h2>Congratulations settings have been imported from existing webengage module<br>
+License code :'.$licenseCode.'<br><br></h2>'); }
+
+else if (Mage::helper('webengage_coup')->FindLicenseId()!==null && Mage::helper('webengage_coup')->FindLicenseId()!==""){
+	$licenseCode=Mage::helper('webengage_coup')->FindLicenseId();
+	echo ('<br>
+	       License code :'.$licenseCode.'<br><br></h2>');
+}
+else{
+       $url2 = '/webengagemain/index';
+		   $url3 = Mage::helper("adminhtml")->getUrl($url2);
+	       Mage::app()->getResponse()->setRedirect($url3);
+
+}
+?>
+<div>
+     <?php if(!$_collection->count()): ?>
+        <h2><?php echo $this->__('You have no notifications') ?></h2>
+        <a href="<?php echo '#' ?>">
+            <?php echo $this->__('Create new notifications using given form') ?>
+        </a>
+	<?php else: ?>
+	    <ul>
+		 <h1>Active Notifications</h1>
+
+		 <li>
+
+                </li>
+
+            <?php foreach($_collection as $registry): ?>
+                <li>
+                    <h3><?php echo $registry->getTitle(); ?></h3>
+                    <p><strong><?php echo $this->__('Notification Name:') ?></strong> <?php echo $registry->getTitle(); ?></p>
+                    <p><strong><?php echo $this->__('Description:') ?> </strong><?php echo $registry->getDescription(); ?></p>
+					<p><strong><?php echo $this->__('Notification link:') ?></strong> <?php echo $registry->getLinkurl(); ?></p>
+                    <p><strong><?php echo $this->__('Notification link text:') ?></strong><?php echo $registry->getLink(); ?></p>
+					<p><strong><?php echo $this->__('Notification Theme:') ?> </strong><?php echo $registry->getTheme(); ?></p>
+                        <u><a href="<?php echo $this->getUrl('/coup/edit/', array('_query' => array('entity_id' => $registry->getEntity_id()))) ?>">
+                            <?php echo $this->__('Edit Notification') ?>
+                        </a></u>&nbsp;
+                        <u><a href="<?php echo $this->getUrl('/coup/delete/', array('_query' => array('entity_id' => $registry->getEntity_id()))) ?>">
+                            <?php echo $this->__('Delete Notification') ?>
+                        </a></u>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+	 <?php endif; ?>
+
+
+</div
+><form action="<?php echo $this->getUrl('/coup/newPost/') ?>" method="post" id="form-validate">
+    <fieldset>
+        <?php echo $this->getBlockHtml('formkey')?>
+		<h2>Create a notification::</h2>
+        <ul class="form-list">
+
+			<li class="field">
+                <label class="giftreg" for="event_name"><?php echo $this->__('title') ?></label>
+                <input type="text" name="title" id="event_name" value="" title="Event Name"/>
+            </li>
+			<li class="field">
+                <label class="giftreg" for="event_name"><?php echo $this->__('description') ?></label>
+                <input type="text" name="description" id="event_name"  title="Event Name"/>
+            </li>
+            <li class="field">
+                <label class="giftreg" for="event_name"><?php echo $this->__('link') ?></label>
+                <input type="text" name="link" id="event_name"  title="Event Name"/>
+            </li>
+            <li class="field">
+                <label class="giftreg" for="event_location"><?php echo $this->__('linkurl') ?></label>
+                <input type="text" name="linkurl" id="event_location"  title="Event Location"/>
+            </li>
+            <li class="field">
+                <label class="giftreg" for="event_country"><?php echo $this->__('theme') ?></label>
+                <input type="text" name="theme" id="event_country"  title="Event Country"/>
+            </li>
+            <li class="field" onclick="rak()">
+            <h2>click to link coupon</h2>
+            </li>
+            <li id="rakesh" style="display: none">
+                <label for="type_id"><?php echo $this->__('Select a Coupon') ?></label>
+                <select id="type_id" name="coupon">
+                    <?php foreach($rcoupon as $type): ?>
+                        <option id="<?php echo $type->getCode(); ?>" value="<?php echo $type->getCode(); ?>">
+                            <?php echo $type->getCode(); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </li>
+        </ul>
+        <div class="buttons-set">
+            <button type="submit" title="Save" class="button">
+                <span>
+                    <span><?php echo $this->__('Save') ?></span>
+                </span>
+            </button>
+        </div>
+    </fieldset>
+</form>
+<script type="text/javascript">
+    //<![CDATA[
+    var dataForm = new VarienForm('form-validate', true);
+    //]]>
+</script>

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<layout version="0.1.0">
+    <adminhtml_coup_index>
+        <reference name="content">
+            <block type="webengage_coup/adminhtml_registries" template="webengage/coup/customer/main.phtml" name="registries" />
+        </reference>
+    </adminhtml_coup_index>
+	<adminhtml_coup_edit>
+        <reference name="content">
+            <block type="webengage_coup/adminhtml_registries" template="webengage/coup/customer/edit.phtml" name="registries" />
+        </reference>
+    </adminhtml_coup_edit>
+	<adminhtml_webengagecallback_index>
+        <reference name="content">
+            <block type="webengage_coup/adminhtml_webengagecallback" template="webengage/coup/customer/webengagecallback.phtml" name="registries" />
+        </reference>
+    </adminhtml_webengagecallback_index>
+	<adminhtml_webengagemain_index>
+        <reference name="content">
+            <block type="webengage_coup/adminhtml_webengagemain" template="webengage/coup/customer/webengagemain.phtml" name="registries" />
+        </reference>
+    </adminhtml_webengagemain_index>
+
+</layout>

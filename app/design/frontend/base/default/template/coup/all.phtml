@@ -1,0 +1,205 @@
+<?php
+$licenseCode = Mage::helper('webengage_coup')->FindLicenseId();
+$siteUrl     = Mage::getBaseUrl(Mage_Core_Model_Store::URL_TYPE_WEB);
+$ddurl       = $siteUrl . 'webengage/cart2/ajaxUrl?item=';
+echo "<script>licenseCode='" . $licenseCode . "'</script>";
+Mage::log('working everywhere');
+echo "<script type=\"text/javascript\" id=\"_webengage_script_tag\">
+        function webeReloadWithDisplay(pdurl,coupon,couponDesc,coupName,cartStatus){
+            console.log('message calling reload');
+        if(pdurl==''){
+
+        }
+        else{
+            document.cookie=\"displayed=yes \";
+        window._weq = window._weq || {};
+                  _weq['webengage.licenseCode'] =licenseCode;
+                  _weq['webengage.survey.forcedRender'] = true;
+                  _weq['webengage.feedback.defaultRender'] = false;
+                  _weq['webengage.notification.forcedRender'] = true;
+                  _weq['webengage.notification.tokens'] = {'pdurl':pdurl,'couponDesc':couponDesc,'couponName':coupName,'couponCode':coupon}
+                  _weq['webengage.ruleData'] = {'cartDropped': cartStatus,'coupon':coupon};
+                 // _weq['webengage.widgetVersion'] = '4.0';
+                   webengage.reload();
+
+        }
+    }
+
+
+                  
+                </script>";
+echo "<script type=\"text/javascript\" id=\"_webengage_script_tag\">
+      function webeMainDrop(pdurl,coupon,couponDesc,coupName,cartStatus){
+             if(getCookie('displayed')!='yes'){
+
+                window._weq = window._weq || {};
+                  _weq['webengage.licenseCode'] =licenseCode;
+                  _weq['webengage.survey.forcedRender'] = true;
+                  _weq['webengage.feedback.defaultRender'] = false;
+                  _weq['webengage.notification.forcedRender'] = true;
+                  _weq['webengage.notification.tokens'] = {'pdurl':pdurl,'couponDesc':couponDesc,'couponName':coupName,'couponCode':coupon}
+                  _weq['webengage.ruleData'] = {'cartDropped': cartStatus,'coupon':coupon};
+                 // _weq['webengage.widgetVersion'] = '4.0';
+                      
+                      
+                       (function(d){ 
+                        var _we = d.createElement('script');
+                        _we.type = 'text/javascript';
+                        _we.async = true;
+                        _we.src = (d.location.protocol == 'https:' ? '//ssl.widgets.webengage.com' : '//cdn.widgets.webengage.com') +  '/js/widget/webengage-min-v-4.0.js';
+                        var _sNode = d.getElementById('_webengage_script_tag');
+                        _sNode.parentNode.insertBefore(_we, _sNode);
+                      })(document);
+
+             }
+             else {
+                document.cookie=\"displayed=no \";
+             }
+         }
+
+                  
+                </script>";
+echo "<script type=\"text/javascript\" id=\"_webengage_script_tag\">
+      function webeMain(pdurl,coupon,couponDesc,coupName,cartStatus){
+
+                window._weq = window._weq || {};
+                  _weq['webengage.licenseCode'] =licenseCode;
+                  _weq['webengage.survey.forcedRender'] = true;
+                  _weq['webengage.feedback.defaultRender'] = false;
+                  _weq['webengage.notification.forcedRender'] = true;
+                  _weq['webengage.notification.tokens'] = {'pdurl':pdurl,'couponDesc':couponDesc,'couponName':coupName,'couponCode':coupon}
+                  _weq['webengage.ruleData'] = {'cartDropped': cartStatus,'coupon':coupon};
+                 // _weq['webengage.widgetVersion'] = '4.0';
+                      
+                      
+                       (function(d){ 
+                        var _we = d.createElement('script');
+                        _we.type = 'text/javascript';
+                        _we.async = true;
+                        _we.src = (d.location.protocol == 'https:' ? '//ssl.widgets.webengage.com' : '//cdn.widgets.webengage.com') +  '/js/widget/webengage-min-v-4.0.js';
+                        var _sNode = d.getElementById('_webengage_script_tag');
+                        _sNode.parentNode.insertBefore(_we, _sNode);
+                      })(document);
+
+             
+             
+         }
+
+                  
+                </script>";
+echo "<script>ddurl='" . $ddurl . "'</script>";
+echo "<script type=\"text/javascript\">
+function getUrlParameter(sParam,par2)
+{
+    var sPageURL = par2;
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++) 
+    {
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam) 
+        {
+            return sParameterName[1];
+        }
+    }
+} 
+</script>
+";
+echo "<script>
+      function getCookie(cname) {
+    var name = cname + \"=\";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+    }
+    return \"\";
+}
+     </script>";
+if (isset($_SESSION['raku']) && isset($_SESSION['coupondata'])) {
+    $pdurl = $siteUrl . 'webengage/cart2/add?' . $_SESSION['raku'];
+    unset($_SESSION['raku']);
+    $coupondata = $_SESSION['coupondata'];
+    unset($_SESSION['coupondata']);
+    echo "<script>var licenseCode='" . $licenseCode . "'</script>";
+    echo "<script>window.pdurl='" . $pdurl . "'</script>";
+    echo "<script>window.couponCode='" . $coupondata['code'] . "'</script>";
+    echo "<script>window.couponName='" . $coupondata['name'] . "'</script>";
+    echo "<script>window.couponDesc='" . $coupondata['desc'] . "'</script>";
+    echo "<script type=\"text/javascript\" id=\"_webengage_script_tag\">
+             webeMainDrop(pdurl,couponCode,couponDesc,couponName,'yes')
+                  
+                </script>";
+} else if (isset($_SESSION['raku'])) {
+    $pdurl = $siteUrl . 'webengage/cart2/add?' . $_SESSION['raku'];
+    unset($_SESSION['raku']);
+    echo "<script>var licenseCode='" . $licenseCode . "'</script>";
+    echo "<script>window.pdurl='" . $pdurl . "'</script>";
+    echo "<script>window.couponCode='" . '' . "'</script>";
+    echo "<script>window.couponName='" . '' . "'</script>";
+    echo "<script>window.couponDesc='" . '' . "'</script>";
+    echo "<script type=\"text/javascript\" id=\"_webengage_script_tag\">
+             webeMainDrop(pdurl,couponCode,couponDesc,couponName,'yes')
+                  
+                </script>";
+} else {
+    $ct = Mage::getModel('checkout/session')->getQuote()->getCouponCode();
+    if (strlen($ct) > 0) {
+    } else {
+        $coupondata = Mage::helper('webengage_coup')->couponPost();
+        if ($coupondata['code'] != '') {
+            echo "<script>usercoup='" . json_encode($coupondata) . "'</script>";
+            $cpurl = $siteUrl . 'webengage/cart2/addcoupon?coup=' . $coupondata['code'];
+            Mage::log($cpurl);
+            echo "<script>window.pdurl='" . $cpurl . "'</script>";
+            echo "<script>window.couponCode='" . $coupondata['code'] . "'</script>";
+            echo "<script>window.couponName='" . $coupondata['name'] . "'</script>";
+            echo "<script>window.couponDesc='" . $coupondata['desc'] . "'</script>";
+            echo "<script type=\"text/javascript\" id=\"_webengage_script_tag\">
+               webeMain(pdurl,couponCode,couponDesc,couponName,\"no\")
+                  
+                </script>";
+        }
+    }
+}
+echo "<script type=\"text/javascript\">
+     function getId(s){
+        var r = new RegExp(\"^.*\/id\/([0-9]+)\/.*$\");
+        p = r.exec(s)[1];
+        return p;
+     }
+     jQuery('a[href*=\"/checkout/cart/ajaxDelete\"]').click(function() {
+        elem =jQuery(this);
+        hreff = elem.attr('href');
+        console.log('sdshnadkj');
+        itemid = getId(hreff);
+        jQuery.get(ddurl+itemid,function(data){
+            console.log('your url is');
+            console.log(data);
+            if (typeof usercoup === 'undefined') {
+                pdurl = data;
+                couponName = '';
+                couponCode = '';
+                couponDesc = '';
+
+
+            }
+            else{
+                jsonCoup =JSON.parse(usercoup);
+                pdurl=data+'&coup='+jsonCoup['code'];
+                couponName = jsonCoup['name'];
+                couponCode = jsonCoup['code'];
+                couponDesc = jsonCoup['desc'];
+
+            }
+            console.log(pdurl);
+            webeReloadWithDisplay(pdurl,couponCode,couponDesc,couponName,\"yes\");
+
+        })
+        
+     });
+
+
+
+</script>";
+?>

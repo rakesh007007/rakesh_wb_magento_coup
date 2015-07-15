@@ -1,0 +1,283 @@
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title>Settings - Cart Coupons - Webengage - Magento</title>
+    
+    <link rel="stylesheet" href="http://localhost/ui2/images/fonts/dbfont/custom-font6.css">
+    <link href="http://localhost/ui2/vendor/bootstrap/css/bootstrap.paper.min.css" rel="stylesheet">
+    <link href="http://localhost/ui2/vendor/select2/select2.css" rel="stylesheet">
+    <link href="http://localhost/ui2/vendor/animate/animate.css" rel="stylesheet">
+    <link href="http://localhost/ui2/css/settings.css" rel="stylesheet">
+
+    <script type="text/javascript" src="http://localhost/ui2/js/components/we-webfont.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <script type="text/javascript" src="/vendor/css3-mediaqueries.js"></script>
+    <![endif]-->
+
+<?php
+    $licenseCode = Mage::helper('webengage_coup')->readLicenseCodeFromDb();
+
+?>
+
+<div class="we-container">
+
+    <div class="we-header clearfix">
+        <div class="we-branding clearfix">
+            <a href="#" class="we-logo"><span class="weicon we_ecomm"></span></a>
+            <a href="#" class="we-plugin-name">Coupon Engage</a>
+            <a href="#" class="we-license-code">license code: <?php echo $licenseCode ?></a>
+        </div>
+        <a href="http://webengage.com" target="_blank" class="we-powered-by-in">
+            <div class="we-powered-by">powered by</div>
+            <div class="we-powered-by-we"><span class="weicon we_logo"></span></div>
+        </a>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2 col-no-padding">
+                <div class="we-menu">
+                    <a href="<?php echo $this->getUrl('/coup/index/') ?>" class="we-menu-item">
+                        <span class="weicon we_edit"></span>
+                        Manage Campaign
+                    </a>
+                    <a  class="we-menu-item" href="<?php echo $this->getUrl('/coup/edit/') ?>">
+                        <span class="weicon we_goalsstats"></span>
+                        Stats
+                    </a>
+                    <a href="<?php echo $this->getUrl('/webengagemain/index/') ?>" class="we-menu-item active">
+                        <span class="weicon we_setting"></span>
+                        Settings
+                    </a>
+                </div>
+            </div>
+            <div class="col-sm-10 col-no-padding">
+                <div class="we-raise clearfix">
+                    <h4 class="we-block-heading">Settings</h4>
+
+                    <div class="we-settings-in">
+                        <div class="we-license-code-edit we-edit">
+                        </div>
+
+                        <?php
+    $this->handleRequest();
+
+    $_REQUEST = $this->getRequest()->getParams();
+    $user = Mage::getSingleton('admin/session');
+    
+    $mLicenseCodeOld = Mage::helper('webengage_coup')->readLicenseCodeFromDb();
+    $mWidgetStatus = Mage::helper('webengage_coup')->readWidgetStatusFromDb();
+    
+    $userId = $user->getUser()->getUserId();
+    $userEmail = $user->getUser()->getEmail();
+    $userFullName = $user->getUser()->getFirstname() . " ". $user->getUser()->getLastname();
+    
+    $siteUrl = Mage::getBaseUrl (Mage_Core_Model_Store::URL_TYPE_WEB);
+    $baseUrl = Mage::getBaseUrl ();
+    $next_url = $this->getUrl('/webengagecallback/index')."?noheader=true&form_key=".$this->getFormKey();
+    $page_url =$this->getUrl('/webengagecallback/index')."?noheader=true";
+    //$resize_url = Mage::helper('weplugin')->getUrlWrapper(Mage::helper("adminhtml")->getUrl("weplugin/adminhtml_webengageresize"));
+    $activation_url = $this->getUrl('/webengagemain/index')."?weAction=activate";
+    Mage::log($next_url);
+    Mage::log($page_url);
+    $email = $userEmail;
+    $urlArr = parse_url($siteUrl);
+    $domainName = $this->getRequest()->getHttpHost();
+    $webengage_host_name = "webengage.com";
+    $webengage_host = 'http://'.$webengage_host_name;
+    $secure_webengage_host = 'https://'.$webengage_host_name;
+    $resend_email_url = $webengage_host . "/thirdparty/signup.html?action=resendVerificationEmail&licenseCode=" . urlencode($mLicenseCodeOld) . "&next=". urlencode($next_url) . 
+                "&activationUrl=" . urlencode($activation_url) . "&channel=magento";
+?>
+<div class="wrap Configuration">
+    <?php
+        // rendering message/error-message as a wp-message if any
+        if(isset($_REQUEST['message']) && $_REQUEST['message']) {
+     ?>
+        <div id="message" class="updated mag_message_box" style="font-size:16px;">
+            <p class="mag_message_box_text"><?php echo $_REQUEST['message'] ?></p>
+        </div>
+    <?php } else if (isset($_REQUEST['error-message']) && $_REQUEST['error-message']) { ?>
+        <div id="message" class="error mag_message_box">
+            <p class="mag_message_box_text"><?php echo $_REQUEST['error-message'] ?></p>
+        </div>
+    <?php } else if ($mWidgetStatus !='' && $mWidgetStatus === 'PENDING') { ?>
+        <div id="message" class="error mag_message_box">
+            <p class="mag_message_box_text">Your WebEngage plugin is not active currently because the email associated with your account needs to be verified.
+                We have sent you the activation email already, please follow the instructions therein. In case you haven't received the email, <a class="resend-email-link" href="#">click here to resend the activation email</a>.<span class="discard-msg">[ <a id="discard-message-link" href="#" title="Discard this message">discard</a> ]</span></p>
+            
+            <form id="form_discard_message" method="post" action="<?php echo Mage::helper('webengage_coup')->getUrlWrapper($this->getFormAction()) . "?noheader=true"; ?>">
+                    <input type="hidden" name="form_key" value="<?php echo $this->getFormKey(); ?>" />
+                    <input type="hidden" value="discardMessage" name="weAction" />
+                    <input type="hidden" value="<?php echo $mLicenseCodeOld; ?>" name="webengage_license_code" />
+            </form>
+            <script type="text/javascript">
+                var discardLink = document.getElementById("discard-message-link");
+                discardLink.onclick = function(){
+                    if(confirm('Do you really wish to discard this message? Please make sure that your account is active'))
+                    {
+                        document.getElementById("form_discard_message").submit();
+                    }
+                    return false;
+                }
+            </script>
+            
+        </div>
+    <?php
+        }
+    ?>
+    <div class="webengage-container">
+        
+
+        <?php if (empty($mLicenseCodeOld) || $mLicenseCodeOld == "") { ?>
+            <div class="webengage-form-container">
+                <div class="webengage-form inline-forms">
+                <h4 class="status-specific show-in-play">New to WebEngage? Create your account</h4>
+                    <hr/>
+                    <?php 
+                        $src_url = $secure_webengage_host. "/thirdparty/signup.html?". "next=". urlencode($next_url) .
+                                             "&em=".urlencode($email)."&domain=".urlencode($domainName)."&nm=".urlencode($userFullName).
+                                             "&activationUrl=".urlencode($activation_url).
+                                             "&channel=magento";
+                    ?>
+                    <div id="webengage-loading-info">Loading, please wait ...</div>
+                    <?php Mage::log( $src_url); ?>
+                    <iframe src="<?php echo $src_url; ?>" class="webengage-iframe signup-iframe" id="we-signup-iframe" marginheight="0" frameborder="0" style="height:0;background-color:transparent;" allowTransparency="true"></iframe>
+                </div>
+
+                <div class="webengage-form inline-forms">
+                <h4 class="status-specific show-in-play">Already a Webengage user? Add license code for <?php echo $domainName ?></h4>
+                    <hr>
+                    <p>Copy the license code for <?php echo $domainName; ?> from your <a target="_blank" class="external_icon" href="<?php echo $webengage_host ?>/publisher/dashboard">WebEngage Dashboard</a> and paste it here.</p>
+                    <form method="post" action="<?php echo Mage::helper('webengage_coup')->getUrlWrapper($this->getFormAction()) . "?noheader=true"; ?>">
+                            <label for="webengage_license_code"><b>Your WebEngage License Code</b></label>
+                            <input id="webengage_license_code" type="text" name="webengage_license_code" placeholder="License Code" value="<?php echo $mLicenseCodeOld ?>"/>
+                            <input type="hidden" name="form_key" value="<?php echo $this->getFormKey(); ?>" />
+                            <input type="hidden"  class="form-control" value="wp-save" name="weAction" />
+                            <input type="hidden" value="submit" name="submit"/>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                    </form>
+                </div>
+
+                <br class="clear"/>
+            </div>
+        <?php } else { ?>
+            <div class="webengage-form-container">
+                <form id="form_we_change_reset" method="post" action="<?php echo Mage::helper('webengage_coup')->getUrlWrapper($this->getFormAction()) . "?noheader=true"; ?>">
+                    <label for="webengage_license_code"><b>Your WebEngage License Code</b></label>
+                    <input readonly="true" id="webengage_license_code" type="text" name="webengage_license_code" placeholder="License Code" value="<?php echo $mLicenseCodeOld ?>"/>
+                    <input type="hidden" name="form_key" value="<?php echo $this->getFormKey(); ?>" />
+                    <input type="hidden" class="btn btn-primary form-control" id = "id_we_action" value="wp-save" name="weAction"/>
+                    
+                    <!-- input type="hidden" value="submit" name="submit"/ -->
+                    <span><a  class="btn btn-primary" id="update-license-code-link" href="#">Change</a></span>
+                    <span>
+                        or, <a  class="btn btn-default" id="reset-license-code-link" href="#">Reset</a>
+                    </span>
+                </form>
+                <script type="text/javascript">
+                    var changeLink = document.getElementById("update-license-code-link");
+                    changeLink.onclick = function(){
+                        document.getElementById("webengage_license_code").removeAttribute("readonly");
+                        this.parentNode.innerHTML = '<button  class="btn btn-primary" type="submit">Save</button>';
+                        return false;
+                    }
+                    
+                    var resetLink = document.getElementById("reset-license-code-link");
+                    resetLink.onclick = function(){
+                        if(confirm('Do you wish to change your email or domain name for this plugin?'))
+                        {
+                            document.getElementById("id_we_action").setAttribute("value", "reset");
+                            document.getElementById("form_we_change_reset").submit();
+                        }
+                        return false;
+                    }
+                </script>
+            </div>
+            
+            <div class="webengage-instructions">
+                Your WebEngage widget is installed. What's next?
+                <ol>
+                    <li>
+                        Manage this widget from your <a href="http://webengage.com/publisher/dashboard">WebEngage dashboard</a>. List of things you can do -
+                        <ul style="padding-left:30px;">
+                            <li style="margin-top:6px;"><b>Feedback</b>: Create your feedback tab with custom text and colors. Choose your language for the widget. Manage your categories and fields for feedback.</li>
+                            <li><b>Notifications</b>: Create your own short notification. Add filters (targeting rules) to show this notification only to a specific set of audience. Drive traffic. Increase conversion. Get real-time reports.</li>
+<li><b>Surveys</b>: Create surveys and add targeting rules for them. Modify CSS to customize the survey skin to match your site's look and feel. View realtime analytics & reports.</li>
+                        </ul>
+                    </li>
+                    <li>The widget is not appearing on your site even after saving the license code? This is most likely beacause you haven't verified your email yet. <a class="resend-email-link" href="#">Resend the activation email</a>.</li>
+                    <li>Can't access your dashboard? Try <a href="http://webengage.com/user/account.html?action=viewForgot">forgot password</a>. If nothing works, please <a href="http://webengage.com/contact">get in touch</a> with us.</li>
+                    <li>Choose from a range of <a href="http://webengage.com/pricing">pricing plans</a> that fits your requirement. Uprades or downgrades done in the dashboard reflect automatically on your site without changing anything in the plugin.</li>
+                </ol>
+            </div>
+            <script>
+                window.onload = function() {
+                    var resendLinks = document.getElementsByTagName('a');
+                    for(var i = 0; i < resendLinks.length; i++) {
+                            var resendLink = resendLinks[i];
+                            if(resendLink.className === 'resend-email-link') {
+                            resendLink.onclick = function() {
+                                    var newFrame = document.createElement("iframe");
+                                newFrame.style.height = "0px";
+                                newFrame.setAttribute("marginheight", "0");
+                                newFrame.setAttribute("frameborder", "0");
+                                newFrame.setAttribute("src", "<?php echo $resend_email_url; ?>");
+                                document.body.appendChild(newFrame);
+                                return false;
+                            }
+                            }
+                    }
+                    }
+            </script>
+            <br class="clear"/>
+        <?php } ?>
+    </div>
+    <script type="text/javascript">
+         if (document.getElementById('we-signup-iframe')) {
+           var resizeIframe = function (height) {
+             document.getElementById('we-signup-iframe').style.height = (parseInt(height) + 60) + "px";
+           };
+           if (typeof window['addEventListener'] !== 'undefined' && typeof window['postMessage'] !== 'undefined') {
+             window.addEventListener("message", function (e) {
+               if (e.origin.search('<?php echo $webengage_host_name; ?>') < 0) {
+                 return;
+               }
+               resizeIframe(e.data);
+             }, false);
+           }
+           document.getElementById('we-signup-iframe').onload = function () {
+             if (typeof window['addEventListener'] === 'undefined' || typeof window['postMessage'] === 'undefined') {
+               document.getElementById('we-signup-iframe').style.height = "450px";
+             }
+             setTimeout(function () {
+               if (document.getElementById('webengage-loading-info')) {
+                 document.getElementById('webengage-loading-info').style.display = 'none';
+               }
+             }, 500);
+           };
+         }
+    </script>
+</div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript" src="http://localhost/ui2/vendor/jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="http://localhost/ui2/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="http://localhost/ui2/js/components/we-form.js"></script>
+<script type="text/javascript" src="http://localhost/ui2/js/settings.js"></script>

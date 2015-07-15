@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Webengage_Coup>
+            <active>true</active>
+            <codePool>local</codePool>
+        </Webengage_Coup >
+    </modules>
+</config>
